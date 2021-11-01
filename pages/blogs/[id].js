@@ -27,23 +27,21 @@ async function submitComment(comments) {
 }
 
 async function getComment(blogId) {
-  var body = {"blog_id": blogId}
-  const response = await fetch("/api/comments/",{
-    method: "POST",
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(body)
+  console.log('30  get comment');
+  const response = await fetch(`/api/comments/${blogId}`,{
+    method: "GET"
   })
   const data = await response.json()
   console.log( data );
   return data.json;
 }
 
+
 export default function Blog({ blog, photo, comments }) {
   const router = useRouter()
   const [validated, setValidated] = useState(false);
   const [all_comments, setall_comments] = useState(comments);
+  
   // console.log(comments);
   // If the page is not yet generated, this will be displayed
   // initially until getStaticProps() finishes running'
@@ -59,20 +57,19 @@ export default function Blog({ blog, photo, comments }) {
 
       await submitComment({
         comments: target.comment.value,
-        blog_id: blog.id,
-        submit: true
+        blog_id: blog.id
       }).then(
         async ()=>{
           await getComment(blog.id).then(
             (value) => {
-              console.log(value);
               setall_comments(value)
+              target.comment.value = null
+              console.log('67 :   ', target.comment.value);
             }
           )
         }
       );
     }
-
     setValidated(true);
   };
 
