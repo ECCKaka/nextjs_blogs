@@ -32,3 +32,13 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+package-lock.json
+db.sqlite3
+yarn.lock
+
+/myapp_test/migrations/*
+
+*.pyc
+
+/env
