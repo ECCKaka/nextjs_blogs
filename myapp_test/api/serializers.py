@@ -20,3 +20,9 @@ class CommentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comments
         fields = ['id','comments', 'date_added', 'blog_id']
+
+
+class BlogsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Blogs
+        fields = '__all__'

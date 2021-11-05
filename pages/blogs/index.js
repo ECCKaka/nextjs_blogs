@@ -7,9 +7,37 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
 import Link from 'next/link'
+import { useState } from 'react';
+import NewBlog from '../../components/new_blog'
+
+async function submitBlog(blog) {
+  console.log('14   ',blog);
+  const response = await fetch("/api/blogs/",{
+    method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(blog)
+  })
+  const data = await response.json()
+  console.log( '25   ', data );
+  return data;
+}
 
 export default function Blogs({blogs}) {
   // console.log(blogs);
+  const [newBlog, setNewBlog] = useState(false);
+  async function onSubmit(e){
+    e.preventDefault();
+    e.stopPropagation();
+    console.log(e);
+    // setNewBlog(false)
+    await submitBlog({
+      blog_title: e.target.blog_title.value,
+      blog_body: e.target.blog_body.value,
+      blog_pic: e.target.blog_pic.files[0]
+    })
+  }
   return (
     <div className={styles.container}>
       <Head>
@@ -38,7 +66,26 @@ export default function Blogs({blogs}) {
             </Col>
           ))}
         </Row>
+
+        <Row className="justify-content-md-center">
+          <Col md="auto">
+            <Button onClick = {()=>{
+              setNewBlog(!newBlog)
+              console.log('48  :  ', newBlog);
+            }}>
+              New Blog
+            </Button>
+          </Col>
+        </Row>
       </Container>
+      {
+        newBlog && 
+        <NewBlog
+          show={newBlog}
+          onHide={()=>setNewBlog(false)}
+          onSubmit = {onSubmit}
+        />
+      }
     </div>
   )
 }

@@ -2,18 +2,19 @@
 import axios from "axios"
 
 export default async function handler(req, res) {
-  const url = `http://localhost:8000/api/comments/`
+  const url = `http://localhost:8000/api/blogs/`
   
   if (req.method === "GET"){
-    console.log('get request: ',req);
-    
+    console.log('get request: ');
   }
   else if (req.method === 'POST') {
-    const { comments, blog_id } = req.body;
+    const { blog_title, blog_body, blog_pic } = req.body;
     var body = {
-      comments: comments,
-      blog_id: blog_id
+      blog_title: blog_title,
+      blog_body: blog_body,
+      blog_pic: blog_pic
     }
+    console.log(body);
     await fetch(url, {
       method: 'POST',
       headers: {
