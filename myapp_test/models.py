@@ -23,6 +23,7 @@ def path_and_rename(instance, filename):
     upload_to = 'photos'
     ext = filename.split('.')[-1]
     # get filename
+    print('\n\n26\n', filename)
     if instance.pk:
         filename = '{}{}.{}'.format(instance.pk,str(datetime.datetime.now()), ext)
     else:
@@ -34,7 +35,7 @@ def path_and_rename(instance, filename):
 class Blogs(models.Model):
     blog_title = models.TextField()
     blog_body = models.TextField()
-    blog_pic = models.ImageField(upload_to=path_and_rename)
+    blog_pic = models.FileField(upload_to=path_and_rename, blank=False, null=False)
     date_added = models.DateField(default=datetime.date.today)
 
     def __str__(self):

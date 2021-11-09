@@ -9,29 +9,45 @@ import Button from 'react-bootstrap/Button'
 import Link from 'next/link'
 import { useState } from 'react';
 import NewBlog from '../../components/new_blog'
+import axios from 'axios';
 
 async function submitBlog(blog) {
-  console.log('14   ',blog);
-  const response = await fetch("/api/blogs/",{
-    method: 'POST', // *GET, POST, PUT, DELETE, etc.
+  const body = new FormData();
+  body.append('blog_pic', blog.blog_pic);
+  body.append('blog_body', blog.blog_body);
+  body.append('blog_title', blog.blog_title);
+  
+  const config = {
     headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(blog)
-  })
-  const data = await response.json()
-  console.log( '25   ', data );
-  return data;
+        'Accept': 'application/json',
+        'Content-Type': 'multipart/form-data'
+    }
+  }; 
+  try {
+      const res = await axios.post('http://localhost:8000/api/blogs/', body, config);
+      if (res.status === 201) {
+          // console.log('31  success\n',res.data);
+          return res.data;
+      }
+  } catch(err) {
+    // console.log('\n',err);
+    // console.log('34  failed\n');
+    return err
+  }
 }
 
 export default function Blogs({blogs}) {
   // console.log(blogs);
   const [newBlog, setNewBlog] = useState(false);
+  
+
   async function onSubmit(e){
     e.preventDefault();
-    e.stopPropagation();
-    console.log(e);
+    // console.log(e);
     // setNewBlog(false)
+    // const pic = await convertToBase64(e.target.blog_pic.files[0]);
+    let reader = new FileReader();
+    
     await submitBlog({
       blog_title: e.target.blog_title.value,
       blog_body: e.target.blog_body.value,

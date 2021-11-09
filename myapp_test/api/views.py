@@ -14,6 +14,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
+from rest_framework.parsers import MultiPartParser, FormParser
+import base64
+
+
 
 class UserViewSet(ListAPIView):
     """
@@ -79,10 +83,23 @@ class BlogsViewSet(APIView):
         serializer = BlogsSerializer(blogs, many=True)
         return Response(serializer.data)
     
-    def post(self, request, format=None):
-        serializer = BlogsSerializer(data=request.data)
+    def post(self, request, *args, **kwargs):
+        print(request.data)
+        
+        # file = request.data['blog_pic'].split(',')[1]
+        # print('\nfile  \n', file)
+        # image = open(file, 'rb')
+        # image_read = image.read()
+        # data = {}
+        # data['blog_pic'] = file
+        # data['blog_title'] = request.data['blog_title']
+        # data['blog_body'] = request.data['blog_body']
+        # print(data)
+        serializer = BlogsSerializer(data=request.data)        
         print('/n/n84 \n', serializer)
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
