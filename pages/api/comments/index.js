@@ -23,10 +23,10 @@ export default async function handler(req, res) {
     })
     .then(response => response.json())
     .then(data => {
-      console.log('27 data ', data );
+      // console.log('27 data ', data );
       res.status(201).send({data})
     }).catch(error => {
-      console.log('30 error  ', error);
+      // console.log('30 error  ', error);
       // console.log(error);
       res.status(500).send({error})
     });

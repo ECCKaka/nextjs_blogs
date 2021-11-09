@@ -18,7 +18,8 @@ from rest_framework import routers
 from myapp_test.api.views import *
 from django.conf.urls import url
 from django.contrib import admin
-
+from django.conf import settings
+from django.conf.urls.static import static
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
@@ -26,4 +27,4 @@ urlpatterns = [
 
     url(r'^api/', include(("myapp_test.api.urls", "myapp_test"), namespace='myapp_test')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
