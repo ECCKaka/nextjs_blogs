@@ -13,7 +13,6 @@ import Form from 'react-bootstrap/Form'
 import { useState, useEffect } from 'react';
 
 async function submitComment(comments) {
-  console.log('16   ',comments);
   const response = await fetch("/api/comments/",{
     method: 'POST', // *GET, POST, PUT, DELETE, etc.
     headers: {
@@ -23,7 +22,6 @@ async function submitComment(comments) {
     body: JSON.stringify(comments)
   })
   const data = await response.json()
-  console.log( '25   ', data );
 }
 
 async function getComment(blogId) {
@@ -32,7 +30,6 @@ async function getComment(blogId) {
     method: "GET"
   })
   const data = await response.json()
-  console.log( data );
   return data.json;
 }
 
@@ -64,7 +61,6 @@ export default function Blog({ blog, photo, comments }) {
             (value) => {
               setall_comments(value)
               target.comment.value = null
-              console.log('67 :   ', target.comment.value);
             }
           )
         }

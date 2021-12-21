@@ -6,6 +6,7 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
+import { ToastContainer, toast } from 'react-toastify';
 import Link from 'next/link'
 import { useState } from 'react';
 import NewBlog from '../../components/new_blog'
@@ -26,33 +27,81 @@ async function submitBlog(blog) {
   try {
       const res = await axios.post('http://localhost:8000/api/blogs/', body, config);
       if (res.status === 201) {
-          // console.log('31  success\n',res.data);
-          return res.data;
+          return ({
+            "res": res.data
+          });
       }
   } catch(err) {
     // console.log('\n',err);
     // console.log('34  failed\n');
-    return err
+    return ({
+      "error": err
+    })
   }
 }
+
+
+// async function submitBlogTest(blog_pic) {
+//   console.log('16   ',blog_pic);
+//   const body = new FormData();
+//   body.append('blog_pic', blog_pic.blog_pic);
+//   const response = await fetch("/api/blogs/",{
+//     method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    
+//     body
+//   })
+//   const data = await response.json()
+//   console.log( '25   ', data );
+// }
 
 export default function Blogs({blogs}) {
   // console.log(blogs);
   const [newBlog, setNewBlog] = useState(false);
+  const showError = (message) => {
+    toast.error(message, {
+      position: "top-right",
+      autoClose: 4000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+    // <ToastContainer />
+  }
   
+  const showSuccess = (message) => {
+    toast.success(message, {
+      position: "top-right",
+      autoClose: 4000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      });
+      // <ToastContainer />
+  }
 
   async function onSubmit(e){
     e.preventDefault();
-    // console.log(e);
-    // setNewBlog(false)
-    // const pic = await convertToBase64(e.target.blog_pic.files[0]);
-    let reader = new FileReader();
     
-    await submitBlog({
+    const new_blog_res = await submitBlog({
       blog_title: e.target.blog_title.value,
       blog_body: e.target.blog_body.value,
       blog_pic: e.target.blog_pic.files[0]
     })
+    const data = await new_blog_res
+    setNewBlog(!newBlog)
+    console.log(data.res);
+    if (data.res){
+      showSuccess('success')
+      return data.res
+    }
+    else{
+      showError('failed')
+      return data.error
+    }
   }
   return (
     <div className={styles.container}>
@@ -67,7 +116,7 @@ export default function Blogs({blogs}) {
             <Col xs={3} key={i}>
               <Card key = {blog.id} style={{ width: '18rem' }}>
                 <Image
-                  src={blog.url}
+                  src={'http://localhost:8000'+blog.blog_pic}
                   alt="Picture of the author"
                   width={600} // automatically provided
                   height={600} // automatically provided
@@ -111,7 +160,7 @@ export default function Blogs({blogs}) {
 export async function getStaticProps() {
   // Call an external API endpoint to get blogs.
   // You can use any data fetching library
-  const res = await fetch('https://jsonplaceholder.typicode.com/photos?_limit=20')
+  const res = await fetch('http://localhost:8000/api/blogs')
   const blogs = await res.json()
   // By returning { props: { blogs } }, the Blog component
   // will receive `blogs` as a prop at build time
