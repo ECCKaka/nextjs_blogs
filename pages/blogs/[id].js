@@ -11,6 +11,7 @@ import Link from 'next/link'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Form from 'react-bootstrap/Form'
 import { useState, useEffect } from 'react';
+import { Divider } from 'antd';
 
 async function submitComment(comments) {
   const response = await fetch("/api/comments/",{
@@ -37,7 +38,7 @@ async function getComment(blogId) {
 export default function Blog({ blog, photo, comments }) {
   const router = useRouter()
   const [validated, setValidated] = useState(false);
-  const [all_comments, setall_comments] = useState(comments);
+  const [allComments, setAllComments] = useState(comments);
   
   // console.log(comments);
   // If the page is not yet generated, this will be displayed
@@ -47,7 +48,6 @@ export default function Blog({ blog, photo, comments }) {
     const form = event.currentTarget;
     var target = event.target
     event.preventDefault();
-    event.stopPropagation();
     if (form.checkValidity() !== false) {
       // this is the value
       console.log(target.comment.value);
@@ -59,7 +59,7 @@ export default function Blog({ blog, photo, comments }) {
         async ()=>{
           await getComment(blog.id).then(
             (value) => {
-              setall_comments(value)
+              setAllComments(value)
               target.comment.value = null
             }
           )
@@ -80,17 +80,31 @@ export default function Blog({ blog, photo, comments }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Container>
+        <Row> 
+          <h1>
+            { blog.blog_title }
+          </h1>
+        </Row>
+        <Divider />
+        <h6>
+          reported on { blog.date_added }
+        </h6>
+        <Divider />
         <Row>
           <Col sm={4}>
             <Card key = {blog.id} style={{ width: '18rem' }}>
               <Image
-                src={photo.url}
+                // pull the local photos
+                src={'http://localhost:8000'+blog.blog_pic}
+                // src={blog.blog_pic.substring(7)}
                 alt="Picture of the author"
                 width={600} // automatically provided
                 height={600} // automatically provided
                 // blurDataURL="data:..." automatically provided
                 // placeholder="blur" // Optional blur-up while loading
+                priority
               /> 
+              {/* <Card.Img variant="top" src={"http://localhost:8000"+blog.blog_pic} /> */}
               <Card.Text>
                 {blog.body}
               </Card.Text>
@@ -102,7 +116,7 @@ export default function Blog({ blog, photo, comments }) {
           </Col>
           <Col sm={8}>
           <ListGroup as="ol" numbered>
-            {all_comments.map((comment, i) => (
+            {allComments.map((comment, i) => (
               <ListGroup.Item as="li" key={i}> {comment.comments}</ListGroup.Item>
             ))}
           </ListGroup>
@@ -134,27 +148,26 @@ export default function Blog({ blog, photo, comments }) {
 // This function gets called at build time
 export async function getStaticPaths() {
   // Call an external API endpoint to get blogs
-  const res = await fetch('https://jsonplaceholder.typicode.com/photos?_limit=20')
+  const res = await fetch('http://localhost:8000/api/blogs')
   const blogs = await res.json()
-
   // Get the paths we want to pre-render based on blogs
-  const paths = blogs.map((blog) => ({
-    params: { id: blog.id.toString() },
+  const paths = blogs.map(({id}) => ({
+    params: { id: id.toString() },
   }))
 
   // We'll pre-render only these paths at build time.
   // { fallback: false } means other routes should 404.
-  return { paths, fallback: true }
+  return { 
+    paths,
+    fallback: false, 
+  }
 }
 
 export async function getStaticProps({ params }) {
   // const id = context.params.id;
-  console.log(params);
   // params contains the blog `id`.
   // If the route is like /blogs/1, then params.id is 1
-  const res_photo = await fetch(`https://jsonplaceholder.typicode.com/photos/${params.id}`)
-  const photo = await res_photo.json()
-  const res_blog = await fetch(`https://jsonplaceholder.typicode.com/comments/${params.id}`)
+  const res_blog = await fetch(`http://localhost:8000/api/blog/${params.id}`)
   const blog = await res_blog.json()
   const res_comments = await fetch(`http://localhost:8000/api/comment/?blog_id=${params.id}`)
   const comments = await res_comments.json()
@@ -163,7 +176,8 @@ export async function getStaticProps({ params }) {
   // Pass blog data to the page via props
   return { props: { 
       blog, 
-      photo, 
+      // if the name are equal, it can be ignored just like the above line
+      // or it can be written as below
       comments: comments
     },
     revalidate: 10

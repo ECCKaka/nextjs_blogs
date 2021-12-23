@@ -93,7 +93,6 @@ export default function Blogs({blogs}) {
     })
     const data = await new_blog_res
     setNewBlog(!newBlog)
-    console.log(data.res);
     if (data.res){
       showSuccess('success')
       return data.res
@@ -120,12 +119,14 @@ export default function Blogs({blogs}) {
                   alt="Picture of the author"
                   width={600} // automatically provided
                   height={600} // automatically provided
+                  // layout="fill"
                   // blurDataURL="data:..." automatically provided
                   // placeholder="blur" // Optional blur-up while loading
                 /> 
                 <Card.Body>
                   <Card.Title>{blog.title}</Card.Title>
-                  <Link href={"/blogs/"+blog.id}><Button variant="primary">Details</Button></Link>
+                  
+                  <Link href={"/blogs/"+blog.id}><Button variant="primary">Read more →</Button></Link>
                 </Card.Body>
               </Card>
             </Col>
@@ -136,7 +137,6 @@ export default function Blogs({blogs}) {
           <Col md="auto">
             <Button onClick = {()=>{
               setNewBlog(!newBlog)
-              console.log('48  :  ', newBlog);
             }}>
               New Blog
             </Button>

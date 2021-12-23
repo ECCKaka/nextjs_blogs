@@ -79,13 +79,12 @@ class BlogsViewSet(APIView):
     API endpoint that allows users to be viewed or edited.
     """
     def get(self, request, format=None):
+        print("82 request::  ", request)
         blogs = Blogs.objects.all()
         serializer = BlogsSerializer(blogs, many=True)
         return Response(serializer.data)
     
-    def post(self, request, *args, **kwargs):
-        print(request.data)
-        
+    def post(self, request, *args, **kwargs):        
         # file = request.data['blog_pic'].split(',')[1]
         # print('\nfile  \n', file)
         # image = open(file, 'rb')
@@ -103,3 +102,45 @@ class BlogsViewSet(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class BlogDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Blogs.objects.get(pk=pk)
+        except Blogs.DoesNotExist:
+            raise Http404
+        
+    def get(self, request, pk, format = None):
+        blog = self.get_object(pk)
+        serializer = BlogsSerializer(blog)
+        return Response(serializer.data)
+    
+    # example of put and delete
+    # def put(self, request, pk, format=None):
+    #     snippet = self.get_object(pk)
+    #     serializer = SnippetSerializer(snippet, data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # def delete(self, request, pk, format=None):
+    #     snippet = self.get_object(pk)
+    #     snippet.delete()
+    #     return Response(status=status.HTTP_204_NO_CONTENT)
+
+class BlogPicTestViewSet(APIView):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    def get(self, request, format=None):
+        blogs = Blogs.objects.all()
+        serializer = BlogPicTestSerializer(blogs, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request, *args, **kwargs):        
+        serializer = BlogPicTestSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -44,3 +44,5 @@ yarn.lock
 /env
 
 /media
+
+/public/photos/*

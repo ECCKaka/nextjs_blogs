@@ -1,24 +1,23 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import axios from "axios"
+// not in use
+
 
 export default async function handler(req, res) {
-  const url = `http://localhost:8000/api/comments/`
+  const url = `http://localhost:8000/api/blogtest/`
   
   if (req.method === "GET"){
     
   }
   else if (req.method === 'POST') {
-    const { comments, blog_id } = req.body;
+    const { blog_pic } = req.body;
     var body = {
-      comments: comments,
-      blog_id: blog_id
+      blog_pic: blog_pic
     }
+    // console.log("body", req.body);
     await fetch(url, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body)
+      body: body
     })
     .then(response => response.json())
     .then(data => {

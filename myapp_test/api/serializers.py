@@ -75,4 +75,11 @@ class BlogsSerializer(serializers.ModelSerializer):
     blog_pic = serializers.ImageField(required=True)
     class Meta:
         model = Blogs
-        fields = ['blog_title','blog_body', 'blog_pic', 'date_added']
+        fields = ['id', 'blog_title','blog_body', 'blog_pic', 'date_added']
+
+class BlogPicTestSerializer(serializers.ModelSerializer):
+    # print('hhh 26\n\n')
+    blog_pic = serializers.ImageField(required=True)
+    class Meta:
+        model = Blog_Pic_Test
+        fields = ['blog_pic', 'date_added']

@@ -46,3 +46,12 @@ class Blogs(models.Model):
         verbose_name = "blogs"
         verbose_name_plural = "blogs"
         db_table = "blogs"
+
+class Blog_Pic_Test(models.Model):
+    blog_pic = models.FileField(upload_to=path_and_rename, blank=False, null=False)
+    date_added = models.DateField(default=datetime.date.today)
+    
+    class Meta:
+        verbose_name = "blog_pic_test"
+        verbose_name_plural = "blog_pic_test"
+        db_table = "blog_pic_test"
