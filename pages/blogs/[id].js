@@ -81,7 +81,7 @@ export default function Blog({ blog, photo, comments }) {
       </Head>
       <Container>
         <Row> 
-          <h1>
+          <h1 className="text-600">
             { blog.blog_title }
           </h1>
         </Row>
