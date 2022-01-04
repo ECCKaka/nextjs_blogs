@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import Head from 'next/head'
 import styles from '../../styles/Home.module.css'
 import Card from 'react-bootstrap/Card'
@@ -54,8 +55,9 @@ async function submitBlog(blog) {
 //   console.log( '25   ', data );
 // }
 
-export default function Blogs({blogs}) {
+export default function Blogs(props) {
   // console.log(blogs);
+  const [blogs, setBlogs] = useState([]);
   const [newBlog, setNewBlog] = useState(false);
   const showError = (message) => {
     toast.error(message, {
@@ -69,6 +71,16 @@ export default function Blogs({blogs}) {
     });
     // <ToastContainer />
   }
+
+  useEffect(() => {
+    setBlogs(props.blogs)
+
+  }, [props.blogs])
+
+  useEffect(() => {
+    console.log(blogs);
+
+  }, [blogs])
   
   const showSuccess = (message) => {
     toast.success(message, {
@@ -95,6 +107,8 @@ export default function Blogs({blogs}) {
     setNewBlog(!newBlog)
     if (data.res){
       showSuccess('success')
+      console.log("data.res:    ",  data.res);
+      setBlogs([...blogs, data.res])
       return data.res
     }
     else{
@@ -109,28 +123,35 @@ export default function Blogs({blogs}) {
         <meta name="description" content="Fetch all Blogs" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <div className='grid grid-cols-3 gap-4' >
+        {blogs.map((blog, i) => (
+          <Card key = {blog.id}>
+            <Image
+              src={'http://localhost:8000'+blog.blog_pic}
+              alt="Picture of the author"
+              width={600} // automatically provided
+              height={250} // automatically provided
+              layout="responsive"
+              // blurDataURL="data:..." automatically provided
+              // placeholder="blur" // Optional blur-up while loading
+            />
+            <Card.Body>
+              <Card.Title>{blog.blog_title}</Card.Title>
+              <Card.Text>
+                {
+                  blog.blog_body.length>170 ? 
+                  blog.blog_body.substring(0,170) + "..." :
+                  blog.blog_body
+                }
+              </Card.Text>
+              <Link href={"/blogs/"+blog.id}><Button variant="primary">Read more →</Button></Link>
+            </Card.Body>
+          </Card>
+        ))}
+      </div>
       <Container>
         <Row>
-          {blogs.map((blog, i) => (
-            <Col xs={3} key={i}>
-              <Card key = {blog.id} style={{ width: '18rem' }}>
-                <Image
-                  src={'http://localhost:8000'+blog.blog_pic}
-                  alt="Picture of the author"
-                  width={600} // automatically provided
-                  height={600} // automatically provided
-                  // layout="fill"
-                  // blurDataURL="data:..." automatically provided
-                  // placeholder="blur" // Optional blur-up while loading
-                /> 
-                <Card.Body>
-                  <Card.Title>{blog.title}</Card.Title>
-                  
-                  <Link href={"/blogs/"+blog.id}><Button variant="primary">Read more →</Button></Link>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
+          
         </Row>
 
         <Row className="justify-content-md-center">
@@ -162,6 +183,7 @@ export async function getStaticProps() {
   // You can use any data fetching library
   const res = await fetch('http://localhost:8000/api/blogs')
   const blogs = await res.json()
+  // console.log(blogs);
   // By returning { props: { blogs } }, the Blog component
   // will receive `blogs` as a prop at build time
   return {

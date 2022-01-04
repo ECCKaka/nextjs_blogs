@@ -23,7 +23,7 @@ function NewBlog( props ) {
 
           <Form.Group className="mb-3" controlId="blog_body">
             <Form.Label>Blog Body</Form.Label>
-            <Form.Control type="textarea" placeholder="blog body" />
+            <Form.Control as="textarea" rows={5} placeholder="blog body" />
           </Form.Group>
           <Form.Group controlId="blog_pic" className="mb-3">
             <Form.Label>Blog Picture</Form.Label>
