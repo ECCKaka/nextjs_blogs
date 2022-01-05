@@ -123,28 +123,56 @@ export default function Blogs(props) {
         <meta name="description" content="Fetch all Blogs" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <p className="text-4xl text-center pb-1 font-light">Blog</p>
       <div className='grid grid-cols-3 gap-4' >
         {blogs.map((blog, i) => (
           <Card key = {blog.id}>
-            <Image
-              src={'http://localhost:8000'+blog.blog_pic}
-              alt="Picture of the author"
-              width={600} // automatically provided
-              height={250} // automatically provided
-              layout="responsive"
-              // blurDataURL="data:..." automatically provided
-              // placeholder="blur" // Optional blur-up while loading
-            />
+            <Link href={"/blogs/"+blog.id}>
+              <a>
+                <Image
+                  src={'http://localhost:8000'+blog.blog_pic}
+                  alt="Picture of the author"
+                  width={600} // automatically provided
+                  height={250} // automatically provided
+                  layout="responsive"
+                  // blurDataURL="data:..." automatically provided
+                  // placeholder="blur" // Optional blur-up while loading
+                />
+              </a>
+            </Link>
             <Card.Body>
-              <Card.Title>{blog.blog_title}</Card.Title>
-              <Card.Text>
+              <Card.Title 
+                style={{
+                  fontWeight: "400"
+                }}
+              >
+                <Link href={"/blogs/"+blog.id}>
+                  <a className='text-black hover:text-[#14a3c1]'>
+                    {blog.blog_title}
+                  </a>
+                </Link>
+              </Card.Title>
+              <Card.Text
+                style={{
+                  fontSize: "0.865rem"
+                }}
+              >
                 {
                   blog.blog_body.length>170 ? 
                   blog.blog_body.substring(0,170) + "..." :
                   blog.blog_body
                 }
               </Card.Text>
-              <Link href={"/blogs/"+blog.id}><Button variant="primary">Read more →</Button></Link>
+              <Link href={"/blogs/"+blog.id}>
+                <a style={{
+                    fontSize: "0.865rem"
+                  }}
+                  className='text-black hover:text-[#14a3c1]'
+                >
+                    Read more →
+                </a>
+                
+              </Link>
             </Card.Body>
           </Card>
         ))}
