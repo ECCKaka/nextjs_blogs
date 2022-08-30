@@ -1,4 +1,5 @@
-// pages/blogs/[id].js
+// /blogs/[id].js
+// /blogs/1
 import { useRouter } from 'next/router'
 import Card from 'react-bootstrap/Card'
 import Image from 'next/image'
@@ -180,6 +181,32 @@ export async function getStaticProps({ params }) {
       // or it can be written as below
       comments: comments
     },
-    revalidate: 10
+    revalidate: 10 // in seconds
   }
 }
+
+
+// server side rendering:::
+// When you request this page directly, 
+// getServerSideProps runs at request time, 
+// and this page will be pre-rendered with the returned props
+
+// export async function getServerSideProps({ params }){
+//   // const id = context.params.id;
+//   // params contains the blog `id`.
+//   // If the route is like /blogs/1, then params.id is 1
+//   const res_blog = await fetch(`http://localhost:8000/api/blog/${params.id}`)
+//   const blog = await res_blog.json()
+//   const res_comments = await fetch(`http://localhost:8000/api/comment/?blog_id=${params.id}`)
+//   const comments = await res_comments.json()
+//   // console.log('190', res_comments);
+
+//   // Pass blog data to the page via props
+//   return { props: { 
+//       blog, 
+//       // if the name are equal, it can be ignored just like the above line
+//       // or it can be written as below
+//       comments: comments
+//     },
+//   }
+// }
