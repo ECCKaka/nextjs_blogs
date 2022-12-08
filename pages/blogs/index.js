@@ -129,12 +129,12 @@ export default function Blogs(props) {
 					<Card key={blog.id}>
 						<Link href={"/blogs/" + blog.id}>
 							<a>
-								<Image
+								<img
 									src={"http://localhost:8000" + blog.blog_pic}
 									alt="Picture of the author"
-									width={600} // automatically provided
-									height={250} // automatically provided
-									layout="responsive"
+									// width={600} // automatically provided
+									// height={250} // automatically provided
+									// layout="responsive"
 									// blurDataURL="data:..." automatically provided
 									// placeholder="blur" // Optional blur-up while loading
 								/>
@@ -202,7 +202,7 @@ export default function Blogs(props) {
 export async function getStaticProps() {
 	// Call an external API endpoint to get blogs.
 	// You can use any data fetching library
-	const res = await fetch("http://localhost:8000/api/blogs");
+	const res = await fetch("http://127.0.0.1:8000/api/blogs");
 	const blogs = await res.json();
 	// console.log(blogs);
 	// By returning { props: { blogs } }, the Blog component

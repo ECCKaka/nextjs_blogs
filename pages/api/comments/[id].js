@@ -6,7 +6,7 @@ export default async function userHandler(req, res) {
 
   switch (method) {
     case 'GET':
-      await fetch(`http://localhost:8000/api/comment/?blog_id=${id}`)
+      await fetch(`http://127.0.0.1:8000/api/comment/?blog_id=${id}`)
       .then(response => {
         return response.json()
       })

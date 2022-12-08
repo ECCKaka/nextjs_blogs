@@ -2,7 +2,7 @@
 import axios from "axios"
 
 export default async function handler(req, res) {
-  const url = `http://localhost:8000/api/comments/`
+  const url = `http://127.0.0.1:8000/api/comments/`
   
   if (req.method === "GET"){
     
